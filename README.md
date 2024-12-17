@@ -139,6 +139,34 @@ Run the following script to automate the evaluation process on the selected 8 se
 python scripts/run_scannet.py
 ```
 
+## Run your own data
+<p align="center">
+  <img src="./media/owndata.gif" width="70%" />
+</p>
+
+HI-SLAM2 supports casual video recordings from smartphone or camera (demo above with iPhone 15). To use your own video data, we provide a preprocessing script that extracts individual frames from your video and runs COLMAP to automatically estimate camera intrinsics. Run the preprocessing with:
+```bash
+python scripts/preprocess_owndata.py PATH_TO_YOUR_VIDEO PATH_TO_OUTPUT_DIR
+```
+once the intrinsics are obtained, you can run HI-SLAM2 by using the following command:
+```bash
+python demo.py \
+--imagedir PATH_TO_OUTPUT_DIR/images \
+--calib PATH_TO_OUTPUT_DIR/calib.txt \
+--config config/owndata_config.yaml \
+--output outputs/owndata \
+--undistort --droidvis --gsvis
+```
+there are some other command line arguments you can use:
+- `--undistort` undistort the image if distortion parameters are provided in the calib file
+- `--droidvis` visualize the point cloud map and the intermediate results
+- `--gsvis` visualize the Gaussian map
+- `--buffer` max number of keyframes to pre-allocate memory for (default: 10% of total frames). 
+  Increase this if you encounter the error: `IndexError: index X is out of bounds for dimension 0 with size X`. 
+- `--start` start frame index (default: from the first frame)
+- `--length` number of frames to process (default: all frames)
+
+
 ## Acknowledgement
 We build this project based on [DROID-SLAM](https://github.com/princeton-vl/DROID-SLAM), [MonoGS](https://github.com/muskie82/MonoGS), [RaDe-GS](https://github.com/BaowenZ/RaDe-GS) and [3DGS](https://github.com/graphdeco-inria/gaussian-splatting). The reconstruction evaluation is based on [evaluate_3d_reconstruction_lib](https://github.com/eriksandstroem/evaluate_3d_reconstruction_lib). We thank the authors for their great works and hope this open-source code can be useful for your research. 
 
